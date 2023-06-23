@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "red", "id": "dil chahta hai", "label": "dil chahta hai", "shape": "dot"}, {"color": "blue", "id": "farhan akhtar  ", "label": "farhan akhtar  ", "shape": "dot"}, {"color": "blue", "id": " kassim jagmagia ", "label": " kassim jagmagia ", "shape": "dot"}, {"color": "red", "id": "shabd", "label": "shabd", "shape": "dot"}, {"color": "blue", "id": "sutapa sikdar  ", "label": "sutapa sikdar  ", "shape": "dot"}, {"color": "blue", "id": " leena yadav  ", "label": " leena yadav  ", "shape": "dot"}, {"color": "blue", "id": " leena yadav ", "label": " leena yadav ", "shape": "dot"}, {"color": "red", "id": "bodyguard", "label": "bodyguard", "shape": "dot"}, {"color": "blue", "id": "j.p. chowksey  ", "label": "j.p. chowksey  ", "shape": "dot"}, {"color": "blue", "id": " kiran kotrial  ", "label": " kiran kotrial  ", "shape": "dot"}, {"color": "blue", "id": " siddique", "label": " siddique", "shape": "dot"}, {"color": "red", "id": "jodhaa akbar", "label": "jodhaa akbar", "shape": "dot"}, {"color": "blue", "id": "haidar ali  ", "label": "haidar ali  ", "shape": "dot"}, {"color": "blue", "id": " haidar ali  ", "label": " haidar ali  ", "shape": "dot"}, {"color": "blue", "id": " ashutosh gowariker  ", "label": " ashutosh gowariker  ", "shape": "dot"}, {"color": "blue", "id": " k.p. saxena ", "label": " k.p. saxena ", "shape": "dot"}, {"color": "red", "id": "chillar party", "label": "chillar party", "shape": "dot"}, {"color": "blue", "id": "vikas bahl  ", "label": "vikas bahl  ", "shape": "dot"}, {"color": "blue", "id": " vijay maurya ", "label": " vijay maurya ", "shape": "dot"}, {"color": "blue", "id": " nitesh tiwari", "label": " nitesh tiwari", "shape": "dot"}, {"color": "red", "id": "delhi belly", "label": "delhi belly", "shape": "dot"}, {"color": "blue", "id": "akshat verma", "label": "akshat verma", "shape": "dot"}, {"color": "red", "id": "karzzzz", "label": "karzzzz", "shape": "dot"}, {"color": "blue", "id": "shiraz ahmed  ", "label": "shiraz ahmed  ", "shape": "dot"}, {"color": "blue", "id": " sameer ", "label": " sameer ", "shape": "dot"}, {"color": "red", "id": "kismat konnection", "label": "kismat konnection", "shape": "dot"}, {"color": "blue", "id": "sanjay chhel ", "label": "sanjay chhel ", "shape": "dot"}, {"color": "blue", "id": " sai kabir  ", "label": " sai kabir  ", "shape": "dot"}, {"color": "blue", "id": " ashish kariya  ", "label": " ashish kariya  ", "shape": "dot"}, {"color": "blue", "id": " rahila mirza  ", "label": " rahila mirza  ", "shape": "dot"}, {"color": "blue", "id": " vibha singh ", "label": " vibha singh ", "shape": "dot"}, {"color": "red", "id": "market", "label": "market", "shape": "dot"}, {"color": "blue", "id": "miraq mirza  ", "label": "miraq mirza  ", "shape": "dot"}, {"color": "blue", "id": " arshad sidhiqi ", "label": " arshad sidhiqi ", "shape": "dot"}, {"color": "red", "id": "tehzeeb", "label": "tehzeeb", "shape": "dot"}, {"color": "blue", "id": "khalid mohamed  ", "label": "khalid mohamed  ", "shape": "dot"}, {"color": "blue", "id": " javed siddiqui ", "label": " javed siddiqui ", "shape": "dot"}, {"color": "red", "id": "ishq qayamat", "label": "ishq qayamat", "shape": "dot"}, {"color": "blue", "id": "raghu menon  ", "label": "raghu menon  ", "shape": "dot"}, {"color": "blue", "id": " deepak sneh", "label": " deepak sneh", "shape": "dot"}, {"color": "red", "id": "dil diya hai", "label": "dil diya hai", "shape": "dot"}, {"color": "blue", "id": "mudassar aziz  ", "label": "mudassar aziz  ", "shape": "dot"}, {"color": "blue", "id": " aditya datt ", "label": " aditya datt ", "shape": "dot"}, {"color": "blue", "id": " vinay mudgil  ", "label": " vinay mudgil  ", "shape": "dot"}, {"color": "blue", "id": " neeraj pathak  ", "label": " neeraj pathak  ", "shape": "dot"}, {"color": "red", "id": "payback", "label": "payback", "shape": "dot"}, {"color": "blue", "id": "upendra sidhaye ", "label": "upendra sidhaye ", "shape": "dot"}, {"color": "blue", "id": " dev sikandar ", "label": " dev sikandar ", "shape": "dot"}, {"color": "red", "id": "kyaa super kool hain hum", "label": "kyaa super kool hain hum", "shape": "dot"}, {"color": "blue", "id": "sukhmani sadana  ", "label": "sukhmani sadana  ", "shape": "dot"}, {"color": "blue", "id": " sachin yardi", "label": " sachin yardi", "shape": "dot"}, {"color": "red", "id": "bachna ae haseeno", "label": "bachna ae haseeno", "shape": "dot"}, {"color": "blue", "id": "aditya chopra  ", "label": "aditya chopra  ", "shape": "dot"}, {"color": "blue", "id": " devika bhagat  ", "label": " devika bhagat  ", "shape": "dot"}, {"color": "blue", "id": " anvita dutt guptan ", "label": " anvita dutt guptan ", "shape": "dot"}, {"color": "red", "id": "khichdi: the movie", "label": "khichdi: the movie", "shape": "dot"}, {"color": "blue", "id": "aatish kapadia ", "label": "aatish kapadia ", "shape": "dot"}, {"color": "red", "id": "hatya: the murder", "label": "hatya: the murder", "shape": "dot"}, {"color": "red", "id": "lottery", "label": "lottery", "shape": "dot"}, {"color": "blue", "id": "aadesh k. arjun  ", "label": "aadesh k. arjun  ", "shape": "dot"}, {"color": "blue", "id": " hemant prabhu ", "label": " hemant prabhu ", "shape": "dot"}, {"color": "red", "id": "m.a.d: mad about dance", "label": "m.a.d: mad about dance", "shape": "dot"}, {"color": "blue", "id": "saahil prem", "label": "saahil prem", "shape": "dot"}, {"color": "red", "id": "hawa", "label": "hawa", "shape": "dot"}, {"color": "blue", "id": "sutanu gupta  ", "label": "sutanu gupta  ", "shape": "dot"}, {"color": "blue", "id": " sutanu gupta  ", "label": " sutanu gupta  ", "shape": "dot"}, {"color": "blue", "id": " sanjay masoom ", "label": " sanjay masoom ", "shape": "dot"}, {"color": "red", "id": "hasee toh phasee", "label": "hasee toh phasee", "shape": "dot"}, {"color": "blue", "id": "harshavardhan kulkarni  ", "label": "harshavardhan kulkarni  ", "shape": "dot"}, {"color": "blue", "id": " harshavardhan kulkarni  ", "label": " harshavardhan kulkarni  ", "shape": "dot"}, {"color": "blue", "id": " anurag kashyap  ", "label": " anurag kashyap  ", "shape": "dot"}, {"color": "blue", "id": " purva naresh  ", "label": " purva naresh  ", "shape": "dot"}, {"color": "blue", "id": " vinil matthew ", "label": " vinil matthew ", "shape": "dot"}, {"color": "red", "id": "samrat \u0026 co.", "label": "samrat \u0026 co.", "shape": "dot"}, {"color": "red", "id": "boss", "label": "boss", "shape": "dot"}, {"color": "blue", "id": "siby k. thomas  ", "label": "siby k. thomas  ", "shape": "dot"}, {"color": "blue", "id": " udaykrishnan  ", "label": " udaykrishnan  ", "shape": "dot"}, {"color": "blue", "id": " farhad ", "label": " farhad ", "shape": "dot"}, {"color": "blue", "id": " sajid", "label": " sajid", "shape": "dot"}, {"color": "red", "id": "aasma: the sky is the limit", "label": "aasma: the sky is the limit", "shape": "dot"}, {"color": "blue", "id": "shubh", "label": "shubh", "shape": "dot"}, {"color": "red", "id": "koi mere dil se poochhe", "label": "koi mere dil se poochhe", "shape": "dot"}, {"color": "red", "id": "chhota bheem and the curse of damyaan", "label": "chhota bheem and the curse of damyaan", "shape": "dot"}, {"color": "blue", "id": "rajiv chilaka  ", "label": "rajiv chilaka  ", "shape": "dot"}, {"color": "blue", "id": " richa deo ", "label": " richa deo ", "shape": "dot"}, {"color": "blue", "id": " seeta", "label": " seeta", "shape": "dot"}, {"color": "red", "id": "ungli", "label": "ungli", "shape": "dot"}, {"color": "blue", "id": "renzil d\u0027silva  ", "label": "renzil d\u0027silva  ", "shape": "dot"}, {"color": "blue", "id": " milap zaveri ", "label": " milap zaveri ", "shape": "dot"}, {"color": "red", "id": "khullam khulla pyaar karen", "label": "khullam khulla pyaar karen", "shape": "dot"}, {"color": "blue", "id": "rajeev kaul  ", "label": "rajeev kaul  ", "shape": "dot"}, {"color": "blue", "id": " anwar khan  ", "label": " anwar khan  ", "shape": "dot"}, {"color": "blue", "id": " praful parekh ", "label": " praful parekh ", "shape": "dot"}, {"color": "red", "id": "a flat", "label": "a flat", "shape": "dot"}, {"color": "blue", "id": "hemant madhukar  ", "label": "hemant madhukar  ", "shape": "dot"}, {"color": "blue", "id": " hemant madhukar  ", "label": " hemant madhukar  ", "shape": "dot"}, {"color": "blue", "id": " ajay monga ", "label": " ajay monga ", "shape": "dot"}, {"color": "red", "id": "dum maaro dum", "label": "dum maaro dum", "shape": "dot"}, {"color": "blue", "id": "charudutt acharya  ", "label": "charudutt acharya  ", "shape": "dot"}, {"color": "blue", "id": " shridhar raghavan  ", "label": " shridhar raghavan  ", "shape": "dot"}, {"color": "blue", "id": " shridhar raghavan", "label": " shridhar raghavan", "shape": "dot"}, {"color": "red", "id": "shudra the rising", "label": "shudra the rising", "shape": "dot"}, {"color": "red", "id": "kamaal dhamaal malamaal", "label": "kamaal dhamaal malamaal", "shape": "dot"}, {"color": "red", "id": "morning raga", "label": "morning raga", "shape": "dot"}, {"color": "blue", "id": "mahesh dattani ", "label": "mahesh dattani ", "shape": "dot"}, {"color": "red", "id": "parwana", "label": "parwana", "shape": "dot"}, {"color": "blue", "id": " rajeev kaul  ", "label": " rajeev kaul  ", "shape": "dot"}, {"color": "blue", "id": " tanveer khan  ", "label": " tanveer khan  ", "shape": "dot"}, {"color": "blue", "id": " praful parekh  ", "label": " praful parekh  ", "shape": "dot"}, {"color": "red", "id": "krazzy 4", "label": "krazzy 4", "shape": "dot"}, {"color": "blue", "id": "ashwani dhir  ", "label": "ashwani dhir  ", "shape": "dot"}, {"color": "blue", "id": " rakesh roshan ", "label": " rakesh roshan ", "shape": "dot"}, {"color": "red", "id": "2 states", "label": "2 states", "shape": "dot"}, {"color": "blue", "id": "chetan bhagat  ", "label": "chetan bhagat  ", "shape": "dot"}, {"color": "blue", "id": " abhishek varman  ", "label": " abhishek varman  ", "shape": "dot"}, {"color": "blue", "id": " hussain dalal ", "label": " hussain dalal ", "shape": "dot"}, {"color": "red", "id": "baghban", "label": "baghban", "shape": "dot"}, {"color": "blue", "id": "shafiq ansari  ", "label": "shafiq ansari  ", "shape": "dot"}, {"color": "blue", "id": " satish bhatnagar  ", "label": " satish bhatnagar  ", "shape": "dot"}, {"color": "blue", "id": " b.r. chopra  ", "label": " b.r. chopra  ", "shape": "dot"}, {"color": "blue", "id": " ram govind  ", "label": " ram govind  ", "shape": "dot"}, {"color": "blue", "id": " achala nagar  ", "label": " achala nagar  ", "shape": "dot"}, {"color": "blue", "id": " achala nagar ", "label": " achala nagar ", "shape": "dot"}, {"color": "red", "id": "dil maange more!!!", "label": "dil maange more!!!", "shape": "dot"}, {"color": "blue", "id": "kiran kotrial  ", "label": "kiran kotrial  ", "shape": "dot"}, {"color": "blue", "id": " anant mahadevan  ", "label": " anant mahadevan  ", "shape": "dot"}, {"color": "blue", "id": " javed siddiqui  ", "label": " javed siddiqui  ", "shape": "dot"}, {"color": "red", "id": "salaam-e-ishq", "label": "salaam-e-ishq", "shape": "dot"}, {"color": "blue", "id": "nikhil advani  ", "label": "nikhil advani  ", "shape": "dot"}, {"color": "blue", "id": " nikhil advani  ", "label": " nikhil advani  ", "shape": "dot"}, {"color": "blue", "id": " suresh nair  ", "label": " suresh nair  ", "shape": "dot"}, {"color": "blue", "id": " saurabh shukla ", "label": " saurabh shukla ", "shape": "dot"}, {"color": "red", "id": "sur: the melody of life", "label": "sur: the melody of life", "shape": "dot"}, {"color": "blue", "id": "tanuja chandra ", "label": "tanuja chandra ", "shape": "dot"}, {"color": "red", "id": "policegiri", "label": "policegiri", "shape": "dot"}, {"color": "blue", "id": "farhad  ", "label": "farhad  ", "shape": "dot"}, {"color": "blue", "id": " hari  ", "label": " hari  ", "shape": "dot"}, {"color": "blue", "id": " k.s. ravikumar  ", "label": " k.s. ravikumar  ", "shape": "dot"}, {"color": "blue", "id": " sajid ", "label": " sajid ", "shape": "dot"}, {"color": "red", "id": "ek vivaah... aisa bhi", "label": "ek vivaah... aisa bhi", "shape": "dot"}, {"color": "blue", "id": "sooraj r. barjatya  ", "label": "sooraj r. barjatya  ", "shape": "dot"}, {"color": "blue", "id": " ashapurna devi  ", "label": " ashapurna devi  ", "shape": "dot"}, {"color": "blue", "id": " ravindra jain  ", "label": " ravindra jain  ", "shape": "dot"}, {"color": "blue", "id": " shashi mittal  ", "label": " shashi mittal  ", "shape": "dot"}, {"color": "blue", "id": " sumit mittal ", "label": " sumit mittal ", "shape": "dot"}, {"color": "red", "id": "kyon ki...", "label": "kyon ki...", "shape": "dot"}, {"color": "red", "id": "ek ajnabee", "label": "ek ajnabee", "shape": "dot"}, {"color": "blue", "id": "apoorva lakhia  ", "label": "apoorva lakhia  ", "shape": "dot"}, {"color": "blue", "id": " manoj tyagi  ", "label": " manoj tyagi  ", "shape": "dot"}, {"color": "blue", "id": " manoj tyagi ", "label": " manoj tyagi ", "shape": "dot"}, {"color": "red", "id": "bin phere free me tere", "label": "bin phere free me tere", "shape": "dot"}, {"color": "blue", "id": "manoj sharma", "label": "manoj sharma", "shape": "dot"}, {"color": "red", "id": "i am", "label": "i am", "shape": "dot"}, {"color": "red", "id": "vadh", "label": "vadh", "shape": "dot"}, {"color": "red", "id": "fugly", "label": "fugly", "shape": "dot"}, {"color": "blue", "id": "rahul handa ", "label": "rahul handa ", "shape": "dot"}, {"color": "red", "id": "ragini mms 2", "label": "ragini mms 2", "shape": "dot"}, {"color": "blue", "id": "tanveer bookwala  ", "label": "tanveer bookwala  ", "shape": "dot"}, {"color": "blue", "id": " ishita moitra ", "label": " ishita moitra ", "shape": "dot"}, {"color": "red", "id": "popcorn khao! mast ho jao", "label": "popcorn khao! mast ho jao", "shape": "dot"}, {"color": "blue", "id": "vishal dadlani  ", "label": "vishal dadlani  ", "shape": "dot"}, {"color": "blue", "id": " kabir sadanand ", "label": " kabir sadanand ", "shape": "dot"}, {"color": "blue", "id": " raghuvir shekhawat ", "label": " raghuvir shekhawat ", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "dil chahta hai", "label": "story", "to": "farhan akhtar  "}, {"from": "dil chahta hai", "label": "story", "to": " kassim jagmagia "}, {"from": "shabd", "label": "dialogue", "to": "sutapa sikdar  "}, {"from": "shabd", "label": "screenplay", "to": " leena yadav  "}, {"from": "shabd", "label": "story", "to": " leena yadav "}, {"from": "bodyguard", "label": "screenplay", "to": "j.p. chowksey  "}, {"from": "bodyguard", "label": "screenplay", "to": " kiran kotrial  "}, {"from": "bodyguard", "label": " siddiqu", "to": " siddique"}, {"from": "jodhaa akbar", "label": "story", "to": "haidar ali  "}, {"from": "jodhaa akbar", "label": "screenplay", "to": " haidar ali  "}, {"from": "jodhaa akbar", "label": "screenplay", "to": " ashutosh gowariker  "}, {"from": "jodhaa akbar", "label": "dialogue", "to": " k.p. saxena "}, {"from": "chillar party", "label": "screenplay", "to": "vikas bahl  "}, {"from": "chillar party", "label": " vijay maurya", "to": " vijay maurya "}, {"from": "chillar party", "label": " nitesh tiwar", "to": " nitesh tiwari"}, {"from": "delhi belly", "label": "akshat verm", "to": "akshat verma"}, {"from": "karzzzz", "label": "screenplay", "to": "shiraz ahmed  "}, {"from": "karzzzz", "label": "lyrics", "to": " sameer "}, {"from": "kismat konnection", "label": "sanjay chhel", "to": "sanjay chhel "}, {"from": "kismat konnection", "label": "screenplay", "to": " sai kabir  "}, {"from": "kismat konnection", "label": "dialogue", "to": " ashish kariya  "}, {"from": "kismat konnection", "label": "story", "to": " rahila mirza  "}, {"from": "kismat konnection", "label": "screenplay", "to": " vibha singh "}, {"from": "market", "label": "screenplay", "to": "miraq mirza  "}, {"from": "market", "label": "story", "to": " arshad sidhiqi "}, {"from": "tehzeeb", "label": "story", "to": "khalid mohamed  "}, {"from": "tehzeeb", "label": "dialogue", "to": " javed siddiqui "}, {"from": "ishq qayamat", "label": "story", "to": "raghu menon  "}, {"from": "ishq qayamat", "label": " deepak sne", "to": " deepak sneh"}, {"from": "dil diya hai", "label": "screenplay", "to": "mudassar aziz  "}, {"from": "dil diya hai", "label": " aditya datt", "to": " aditya datt "}, {"from": "dil diya hai", "label": "screenplay", "to": " vinay mudgil  "}, {"from": "dil diya hai", "label": "screenplay", "to": " neeraj pathak  "}, {"from": "dil diya hai", "label": "lyrics", "to": " sameer "}, {"from": "payback", "label": "upendra sidhaye", "to": "upendra sidhaye "}, {"from": "payback", "label": "lyrics", "to": " dev sikandar "}, {"from": "kyaa super kool hain hum", "label": "dialogue revisor", "to": "sukhmani sadana  "}, {"from": "kyaa super kool hain hum", "label": " sachin yard", "to": " sachin yardi"}, {"from": "bachna ae haseeno", "label": "story", "to": "aditya chopra  "}, {"from": "bachna ae haseeno", "label": "screenplay", "to": " devika bhagat  "}, {"from": "bachna ae haseeno", "label": "dialogue", "to": " anvita dutt guptan "}, {"from": "khichdi: the movie", "label": "screenplay", "to": "aatish kapadia "}, {"from": "hatya: the murder", "label": "screenplay", "to": "aatish kapadia "}, {"from": "lottery", "label": "dialogue", "to": "aadesh k. arjun  "}, {"from": "lottery", "label": "screenplay", "to": " hemant prabhu "}, {"from": "m.a.d: mad about dance", "label": "saahil pre", "to": "saahil prem"}, {"from": "hawa", "label": "screenplay", "to": "sutanu gupta  "}, {"from": "hawa", "label": "story", "to": " sutanu gupta  "}, {"from": "hawa", "label": "dialogue", "to": " sanjay masoom "}, {"from": "hasee toh phasee", "label": "story", "to": "harshavardhan kulkarni  "}, {"from": "hasee toh phasee", "label": "dialogue", "to": " harshavardhan kulkarni  "}, {"from": "hasee toh phasee", "label": "dialogue", "to": " anurag kashyap  "}, {"from": "hasee toh phasee", "label": "dialogue", "to": " purva naresh  "}, {"from": "hasee toh phasee", "label": "dialogue", "to": " vinil matthew "}, {"from": "samrat \u0026 co.", "label": "story", "to": "harshavardhan kulkarni  "}, {"from": "samrat \u0026 co.", "label": "dialogue", "to": " harshavardhan kulkarni  "}, {"from": "samrat \u0026 co.", "label": "dialogue", "to": " anurag kashyap  "}, {"from": "samrat \u0026 co.", "label": "dialogue", "to": " purva naresh  "}, {"from": "samrat \u0026 co.", "label": "dialogue", "to": " vinil matthew "}, {"from": "boss", "label": "original story", "to": "siby k. thomas  "}, {"from": "boss", "label": "original story", "to": " udaykrishnan  "}, {"from": "boss", "label": " farhad", "to": " farhad "}, {"from": "boss", "label": " saji", "to": " sajid"}, {"from": "aasma: the sky is the limit", "label": "shub", "to": "shubh"}, {"from": "koi mere dil se poochhe", "label": "shub", "to": "shubh"}, {"from": "chhota bheem and the curse of damyaan", "label": "original idea", "to": "rajiv chilaka  "}, {"from": "chhota bheem and the curse of damyaan", "label": " richa deo", "to": " richa deo "}, {"from": "chhota bheem and the curse of damyaan", "label": " seet", "to": " seeta"}, {"from": "ungli", "label": "story", "to": "renzil d\u0027silva  "}, {"from": "ungli", "label": "dialogue", "to": " milap zaveri "}, {"from": "khullam khulla pyaar karen", "label": "screenplay", "to": "rajeev kaul  "}, {"from": "khullam khulla pyaar karen", "label": "dialogue", "to": " anwar khan  "}, {"from": "khullam khulla pyaar karen", "label": "screenplay", "to": " praful parekh "}, {"from": "a flat", "label": "screenplay", "to": "hemant madhukar  "}, {"from": "a flat", "label": "story", "to": " hemant madhukar  "}, {"from": "a flat", "label": "screenplay", "to": " ajay monga "}, {"from": "dum maaro dum", "label": "dialogue", "to": "charudutt acharya  "}, {"from": "dum maaro dum", "label": "dialogue", "to": " purva naresh  "}, {"from": "dum maaro dum", "label": "dialogue", "to": " shridhar raghavan  "}, {"from": "dum maaro dum", "label": " shridhar raghava", "to": " shridhar raghavan"}, {"from": "shudra the rising", "label": "dialogue", "to": "charudutt acharya  "}, {"from": "shudra the rising", "label": "dialogue", "to": " purva naresh  "}, {"from": "shudra the rising", "label": "dialogue", "to": " shridhar raghavan  "}, {"from": "shudra the rising", "label": " shridhar raghava", "to": " shridhar raghavan"}, {"from": "kamaal dhamaal malamaal", "label": "dialogue", "to": "charudutt acharya  "}, {"from": "kamaal dhamaal malamaal", "label": "dialogue", "to": " purva naresh  "}, {"from": "kamaal dhamaal malamaal", "label": "dialogue", "to": " shridhar raghavan  "}, {"from": "kamaal dhamaal malamaal", "label": " shridhar raghava", "to": " shridhar raghavan"}, {"from": "morning raga", "label": "story", "to": "mahesh dattani "}, {"from": "parwana", "label": "screenplay", "to": "rajeev kaul  "}, {"from": "parwana", "label": "story", "to": " rajeev kaul  "}, {"from": "parwana", "label": "dialogue", "to": " tanveer khan  "}, {"from": "parwana", "label": "screenplay", "to": " praful parekh  "}, {"from": "parwana", "label": "story", "to": " praful parekh "}, {"from": "krazzy 4", "label": "screenplay", "to": "ashwani dhir  "}, {"from": "krazzy 4", "label": "story", "to": " rakesh roshan "}, {"from": "2 states", "label": "story", "to": "chetan bhagat  "}, {"from": "2 states", "label": "screenplay", "to": " abhishek varman  "}, {"from": "2 states", "label": "dialogue", "to": " hussain dalal "}, {"from": "baghban", "label": "screenplay", "to": "shafiq ansari  "}, {"from": "baghban", "label": "screenplay", "to": " satish bhatnagar  "}, {"from": "baghban", "label": "story", "to": " b.r. chopra  "}, {"from": "baghban", "label": "screenplay", "to": " ram govind  "}, {"from": "baghban", "label": "dialogue", "to": " achala nagar  "}, {"from": "baghban", "label": "screenplay", "to": " achala nagar "}, {"from": "dil maange more!!!", "label": "additional dialogue", "to": "kiran kotrial  "}, {"from": "dil maange more!!!", "label": "story", "to": " anant mahadevan  "}, {"from": "dil maange more!!!", "label": "dialogue", "to": " javed siddiqui  "}, {"from": "dil maange more!!!", "label": "screenplay", "to": " javed siddiqui "}, {"from": "salaam-e-ishq", "label": "screenplay", "to": "nikhil advani  "}, {"from": "salaam-e-ishq", "label": "story", "to": " nikhil advani  "}, {"from": "salaam-e-ishq", "label": "screenplay", "to": " suresh nair  "}, {"from": "salaam-e-ishq", "label": "script", "to": " saurabh shukla "}, {"from": "sur: the melody of life", "label": "tanuja chandra", "to": "tanuja chandra "}, {"from": "sur: the melody of life", "label": "dialogue", "to": " vibha singh "}, {"from": "policegiri", "label": "dialogue", "to": "farhad  "}, {"from": "policegiri", "label": "original story", "to": " hari  "}, {"from": "policegiri", "label": "screenplay", "to": " k.s. ravikumar  "}, {"from": "policegiri", "label": "dialogue", "to": " sajid "}, {"from": "ek vivaah... aisa bhi", "label": "story", "to": "sooraj r. barjatya  "}, {"from": "ek vivaah... aisa bhi", "label": "story", "to": " ashapurna devi  "}, {"from": "ek vivaah... aisa bhi", "label": "lyrics", "to": " ravindra jain  "}, {"from": "ek vivaah... aisa bhi", "label": "dialogue \u0026 screenplay", "to": " shashi mittal  "}, {"from": "ek vivaah... aisa bhi", "label": "dialogue \u0026 screenplay", "to": " sumit mittal "}, {"from": "kyon ki...", "label": "dialogue", "to": "sanjay chhel "}, {"from": "ek ajnabee", "label": "screenplay", "to": "apoorva lakhia  "}, {"from": "ek ajnabee", "label": "screenplay", "to": " manoj tyagi  "}, {"from": "ek ajnabee", "label": "dialogue", "to": " manoj tyagi "}, {"from": "bin phere free me tere", "label": "manoj sharm", "to": "manoj sharma"}, {"from": "i am", "label": "manoj sharm", "to": "manoj sharma"}, {"from": "vadh", "label": "manoj sharm", "to": "manoj sharma"}, {"from": "fugly", "label": "story", "to": "rahul handa "}, {"from": "ragini mms 2", "label": "story", "to": "tanveer bookwala  "}, {"from": "ragini mms 2", "label": "dialogue", "to": " ishita moitra "}, {"from": "popcorn khao! mast ho jao", "label": "lyrics", "to": "vishal dadlani  "}, {"from": "popcorn khao! mast ho jao", "label": " kabir sadanand", "to": " kabir sadanand "}, {"from": "popcorn khao! mast ho jao", "label": "dialogue", "to": " raghuvir shekhawat "}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

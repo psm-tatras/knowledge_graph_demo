@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "dep": "advcl", "id": "Growing", "label": "Growing", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ccomp", "id": "are", "label": "are", "pos": "AUX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "said", "label": "said", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "at", "label": "at", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "det", "id": "a", "label": "a", "pos": "DET", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "pace", "label": "pace", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "steady", "label": "steady", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "UPI", "label": "UPI", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "transactions", "label": "transactions", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "acomp", "id": "likely", "label": "likely", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "aux", "id": "to", "label": "to", "pos": "PART", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "xcomp", "id": "reach", "label": "reach", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "1", "label": "1", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "billion", "label": "billion", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "per", "label": "per", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "day", "label": "day", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "by", "label": "by", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "2026", "label": "2026", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "punct", "id": "-", "label": "-", "pos": "SYM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "27", "label": "27", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "npadvmod", "id": "2022", "label": "2022", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advcl", "id": "accounting", "label": "accounting", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "for", "label": "for", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nummod", "id": "90", "label": "90", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "percent", "label": "percent", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "of", "label": "of", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "det", "id": "the", "label": "the", "pos": "DET", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "payments", "label": "payments", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "country", "label": "country", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "report", "label": "report", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "retail", "label": "retail", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "digital", "label": "digital", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "in", "label": "in", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ccomp", "id": "titled", "label": "titled", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "PwC", "label": "PwC", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "det", "id": "The", "label": "The", "pos": "DET", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "oprd", "id": "Handbook", "label": "Handbook", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "Indian", "label": "Indian", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "Payments", "label": "Payments", "pos": "PROPN", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Growing", "to": "are", "width": 1}, {"arrows": "to", "from": "are", "to": "said", "width": 1}, {"arrows": "to", "from": "at", "to": "Growing", "width": 1}, {"arrows": "to", "from": "a", "to": "pace", "width": 1}, {"arrows": "to", "from": "pace", "to": "at", "width": 1}, {"arrows": "to", "from": "steady", "to": "pace", "width": 1}, {"arrows": "to", "from": "UPI", "to": "transactions", "width": 1}, {"arrows": "to", "from": "transactions", "to": "are", "width": 1}, {"arrows": "to", "from": "said", "to": "said", "width": 1}, {"arrows": "to", "from": "likely", "to": "are", "width": 1}, {"arrows": "to", "from": "to", "to": "reach", "width": 1}, {"arrows": "to", "from": "reach", "to": "likely", "width": 1}, {"arrows": "to", "from": "1", "to": "billion", "width": 1}, {"arrows": "to", "from": "billion", "to": "reach", "width": 1}, {"arrows": "to", "from": "per", "to": "billion", "width": 1}, {"arrows": "to", "from": "day", "to": "per", "width": 1}, {"arrows": "to", "from": "by", "to": "reach", "width": 1}, {"arrows": "to", "from": "2026", "to": "by", "width": 1}, {"arrows": "to", "from": "-", "to": "27", "width": 1}, {"arrows": "to", "from": "27", "to": "2026", "width": 1}, {"arrows": "to", "from": "27", "to": "2022", "width": 1}, {"arrows": "to", "from": "accounting", "to": "reach", "width": 1}, {"arrows": "to", "from": "for", "to": "accounting", "width": 1}, {"arrows": "to", "from": "90", "to": "percent", "width": 1}, {"arrows": "to", "from": "percent", "to": "for", "width": 1}, {"arrows": "to", "from": "of", "to": "percent", "width": 1}, {"arrows": "to", "from": "the", "to": "payments", "width": 1}, {"arrows": "to", "from": "the", "to": "country", "width": 1}, {"arrows": "to", "from": "the", "to": "report", "width": 1}, {"arrows": "to", "from": "payments", "to": "of", "width": 1}, {"arrows": "to", "from": "retail", "to": "payments", "width": 1}, {"arrows": "to", "from": "digital", "to": "payments", "width": 1}, {"arrows": "to", "from": "in", "to": "payments", "width": 1}, {"arrows": "to", "from": "country", "to": "in", "width": 1}, {"arrows": "to", "from": "report", "to": "titled", "width": 1}, {"arrows": "to", "from": "PwC", "to": "report", "width": 1}, {"arrows": "to", "from": "titled", "to": "report", "width": 1}, {"arrows": "to", "from": "titled", "to": "said", "width": 1}, {"arrows": "to", "from": "The", "to": "Handbook", "width": 1}, {"arrows": "to", "from": "Handbook", "to": "titled", "width": 1}, {"arrows": "to", "from": "Indian", "to": "Payments", "width": 1}, {"arrows": "to", "from": "Payments", "to": "Handbook", "width": 1}, {"arrows": "to", "from": "2022", "to": "Handbook", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

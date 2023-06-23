@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "dep": "nsubj", "id": "This", "label": "This", "pos": "PRON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "aux", "id": "been", "label": "been", "pos": "AUX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "helped", "label": "helped", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "marked", "label": "marked", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "posed", "label": "posed", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "enabled", "label": "enabled", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "pushing", "label": "pushing", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "aux", "id": "has", "label": "has", "pos": "AUX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advcl", "id": "facilitated", "label": "facilitated", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "transformed", "label": "transformed", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "attr", "id": "significant achievement", "label": "significant achievement", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "for", "label": "for", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "government services access", "label": "government services access", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "replaced", "label": "replaced", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "significant challenge", "label": "significant challenge", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "India", "label": "India", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "in", "label": "in", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "of", "label": "of", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "it", "label": "it", "pos": "PRON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "provides", "label": "provides", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "government", "label": "government", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "agent", "id": "by", "label": "by", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dative", "id": "to", "label": "to", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "xcomp", "id": "deliver", "label": "deliver", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "xcomp", "id": "extend", "label": "extend", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nummod", "id": "6", "label": "6", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "xcomp", "id": "empower", "label": "empower", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "xcomp", "id": "improve", "label": "improve", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pcomp", "id": "delivering", "label": "delivering", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "various social welfare schemes", "label": "various social welfare schemes", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advmod", "id": "directly", "label": "directly", "pos": "ADV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "poss", "id": "beneficiary", "label": "beneficiary", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "bank accounts", "label": "bank accounts", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "had", "label": "had", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "case", "id": "\u2019s", "label": "\u2019s", "pos": "PART", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "cutting", "label": "cutting", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "leakages", "label": "leakages", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "ensuring", "label": "ensuring", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ccomp", "id": "reach", "label": "reach", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "benefits", "label": "benefits", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "recipients", "label": "recipients", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "intended", "label": "intended", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "Aadhaar", "label": "Aadhaar", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "is", "label": "is", "pos": "AUX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advcl", "id": "using", "label": "using", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "transfer", "label": "transfer", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "millions", "label": "millions", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "cost", "label": "cost", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "form", "label": "form", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "attr", "id": "first layer", "label": "first layer", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "Unique Identification Authority", "label": "Unique Identification Authority", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "vast majority", "label": "vast majority", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "quantmod", "id": "over", "label": "over", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nummod", "id": "billion", "label": "billion", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nummod", "id": "million", "label": "million", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "beneficiaries", "label": "beneficiaries", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "quantmod", "id": "$", "label": "$", "pos": "SYM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "310", "label": "310", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "more", "label": "more", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "quantmod", "id": "than", "label": "than", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "cents", "label": "cents", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "under", "label": "under", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "accounts", "label": "accounts", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "direct benefit transfers", "label": "direct benefit transfers", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advcl", "id": "opening", "label": "opening", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "acl", "id": "issued", "label": "issued", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dep", "id": "\n", "label": "\n", "pos": "SPACE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": ".", "label": ".", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "banking", "label": "banking", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "Indians", "label": "Indians", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advcl", "id": "improving", "label": "improving", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "financial inclusion", "label": "financial inclusion", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advcl", "id": "reducing", "label": "reducing", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "corruption", "label": "corruption", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "acomp", "id": "instrumental", "label": "instrumental", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nummod", "id": "25", "label": "25", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "one", "label": "one", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "turning point", "label": "turning point", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "poor", "label": "poor", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pcomp", "id": "achieving", "label": "achieving", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "det", "id": "this", "label": "this", "pos": "DET", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "goal", "label": "goal", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "KYC process", "label": "KYC process", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "KYC", "label": "KYC", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pcomp", "id": "conducting", "label": "conducting", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "e", "label": "e", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "-", "label": "-", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "from", "label": "from", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nummod", "id": "12", "label": "12", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "Indian government", "label": "Indian government", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "introduced", "label": "introduced", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "balance bank", "label": "balance bank", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "Pradhan Mantri Jan Dhan Yojana", "label": "Pradhan Mantri Jan Dhan Yojana", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "compound", "id": "450", "label": "450", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "2022", "label": "2022", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "npadvmod", "id": "Today", "label": "Today", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "acomp", "id": "ubiquitous", "label": "ubiquitous", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "easy", "label": "easy", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "quick authentication", "label": "quick authentication", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advcl", "id": "helping", "label": "helping", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "citizens", "label": "citizens", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "authentication ecosystem", "label": "authentication ecosystem", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "authentication", "label": "authentication", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "voter IDs", "label": "voter IDs", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "ration cards", "label": "ration cards", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "such", "label": "such", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "as", "label": "as", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "relcl", "id": "serves", "label": "serves", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "passports", "label": "passports", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "Before", "label": "Before", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advmod", "id": "only", "label": "only", "pos": "ADV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "people", "label": "people", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "det", "id": "any", "label": "any", "pos": "DET", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "lacked", "label": "lacked", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "formal identification", "label": "formal identification", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advmod", "id": "just", "label": "just", "pos": "ADV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "four", "label": "four", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "It", "label": "It", "pos": "PRON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "ROOT", "id": "comprises", "label": "comprises", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "private sector", "label": "private sector", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "efficiencies", "label": "efficiencies", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "innovate", "label": "innovate", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "new products", "label": "new products", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "services", "label": "services", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "India stack", "label": "India stack", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "poss", "id": "individual", "label": "individual", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "fingerprints", "label": "fingerprints", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "biometric identity", "label": "biometric identity", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "case", "id": "\u0027s", "label": "\u0027s", "pos": "PART", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "poss", "id": "country", "label": "country", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "amod", "id": "biometric", "label": "biometric", "pos": "ADJ", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "iris scan", "label": "iris scan", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "demographic information", "label": "demographic information", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "including", "label": "including", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "poss", "id": "their", "label": "their", "pos": "PRON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "name", "label": "name", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "age", "label": "age", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "gender", "label": "gender", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "conj", "id": "residential address", "label": "residential address", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nsubj", "id": "which", "label": "which", "pos": "PRON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "relcl", "id": "means", "label": "means", "pos": "VERB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "foundation", "label": "foundation", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "attr", "id": "digit number", "label": "digit number", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "digital transformation journey", "label": "digital transformation journey", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "In", "label": "In", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "2010", "label": "2010", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "prep", "id": "Until", "label": "Until", "pos": "ADP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "appos", "id": "Aadhaar number", "label": "Aadhaar number", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "appos", "id": "UIDAI", "label": "UIDAI", "pos": "PROPN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "dobj", "id": "essential services", "label": "essential services", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "advmod", "id": "especially", "label": "especially", "pos": "ADV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "rural areas", "label": "rural areas", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "Indian population", "label": "Indian population", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "pobj", "id": "reliable formal identification", "label": "reliable formal identification", "pos": "NOUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "nummod", "id": "zero", "label": "zero", "pos": "NUM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "dep": "appos", "id": "PMJDY", "label": "PMJDY", "pos": "PROPN", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "This", "to": "been", "width": 1}, {"arrows": "to", "from": "This", "to": "helped", "width": 1}, {"arrows": "to", "from": "This", "to": "marked", "width": 1}, {"arrows": "to", "from": "This", "to": "posed", "width": 1}, {"arrows": "to", "from": "been", "to": "enabled", "width": 1}, {"arrows": "to", "from": "been", "to": "been", "width": 1}, {"arrows": "to", "from": "been", "to": "pushing", "width": 1}, {"arrows": "to", "from": "has", "to": "been", "width": 1}, {"arrows": "to", "from": "has", "to": "enabled", "width": 1}, {"arrows": "to", "from": "has", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "has", "to": "helped", "width": 1}, {"arrows": "to", "from": "has", "to": "pushing", "width": 1}, {"arrows": "to", "from": "has", "to": "transformed", "width": 1}, {"arrows": "to", "from": "enabled", "to": "enabled", "width": 1}, {"arrows": "to", "from": "significant achievement", "to": "been", "width": 1}, {"arrows": "to", "from": "for", "to": "significant achievement", "width": 1}, {"arrows": "to", "from": "for", "to": "government services access", "width": 1}, {"arrows": "to", "from": "for", "to": "pushing", "width": 1}, {"arrows": "to", "from": "for", "to": "replaced", "width": 1}, {"arrows": "to", "from": "for", "to": "significant challenge", "width": 1}, {"arrows": "to", "from": "India", "to": "for", "width": 1}, {"arrows": "to", "from": "India", "to": "in", "width": 1}, {"arrows": "to", "from": "India", "to": "of", "width": 1}, {"arrows": "to", "from": "it", "to": "enabled", "width": 1}, {"arrows": "to", "from": "it", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "it", "to": "provides", "width": 1}, {"arrows": "to", "from": "government", "to": "enabled", "width": 1}, {"arrows": "to", "from": "government", "to": "by", "width": 1}, {"arrows": "to", "from": "government", "to": "for", "width": 1}, {"arrows": "to", "from": "to", "to": "deliver", "width": 1}, {"arrows": "to", "from": "to", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "to", "to": "extend", "width": 1}, {"arrows": "to", "from": "to", "to": "6", "width": 1}, {"arrows": "to", "from": "to", "to": "provides", "width": 1}, {"arrows": "to", "from": "to", "to": "empower", "width": 1}, {"arrows": "to", "from": "to", "to": "improve", "width": 1}, {"arrows": "to", "from": "to", "to": "delivering", "width": 1}, {"arrows": "to", "from": "deliver", "to": "enabled", "width": 1}, {"arrows": "to", "from": "various social welfare schemes", "to": "deliver", "width": 1}, {"arrows": "to", "from": "directly", "to": "deliver", "width": 1}, {"arrows": "to", "from": "beneficiary", "to": "bank accounts", "width": 1}, {"arrows": "to", "from": "bank accounts", "to": "to", "width": 1}, {"arrows": "to", "from": "bank accounts", "to": "had", "width": 1}, {"arrows": "to", "from": "\u2019s", "to": "beneficiary", "width": 1}, {"arrows": "to", "from": "cutting", "to": "deliver", "width": 1}, {"arrows": "to", "from": "leakages", "to": "cutting", "width": 1}, {"arrows": "to", "from": "ensuring", "to": "cutting", "width": 1}, {"arrows": "to", "from": "reach", "to": "ensuring", "width": 1}, {"arrows": "to", "from": "benefits", "to": "reach", "width": 1}, {"arrows": "to", "from": "recipients", "to": "reach", "width": 1}, {"arrows": "to", "from": "intended", "to": "recipients", "width": 1}, {"arrows": "to", "from": "Aadhaar", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "Aadhaar", "to": "been", "width": 1}, {"arrows": "to", "from": "Aadhaar", "to": "is", "width": 1}, {"arrows": "to", "from": "Aadhaar", "to": "transformed", "width": 1}, {"arrows": "to", "from": "Aadhaar", "to": "had", "width": 1}, {"arrows": "to", "from": "Aadhaar", "to": "using", "width": 1}, {"arrows": "to", "from": "facilitated", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "facilitated", "to": "been", "width": 1}, {"arrows": "to", "from": "transfer", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "of", "to": "transfer", "width": 1}, {"arrows": "to", "from": "of", "to": "millions", "width": 1}, {"arrows": "to", "from": "of", "to": "cost", "width": 1}, {"arrows": "to", "from": "of", "to": "form", "width": 1}, {"arrows": "to", "from": "of", "to": "first layer", "width": 1}, {"arrows": "to", "from": "of", "to": "Unique Identification Authority", "width": 1}, {"arrows": "to", "from": "of", "to": "vast majority", "width": 1}, {"arrows": "to", "from": "over", "to": "billion", "width": 1}, {"arrows": "to", "from": "over", "to": "million", "width": 1}, {"arrows": "to", "from": "billion", "to": "of", "width": 1}, {"arrows": "to", "from": "billion", "to": "beneficiaries", "width": 1}, {"arrows": "to", "from": "$", "to": "billion", "width": 1}, {"arrows": "to", "from": "$", "to": "6", "width": 1}, {"arrows": "to", "from": "310", "to": "billion", "width": 1}, {"arrows": "to", "from": "more", "to": "billion", "width": 1}, {"arrows": "to", "from": "than", "to": "billion", "width": 1}, {"arrows": "to", "from": "6", "to": "billion", "width": 1}, {"arrows": "to", "from": "6", "to": "cents", "width": 1}, {"arrows": "to", "from": "beneficiaries", "to": "to", "width": 1}, {"arrows": "to", "from": "under", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "under", "to": "accounts", "width": 1}, {"arrows": "to", "from": "direct benefit transfers", "to": "under", "width": 1}, {"arrows": "to", "from": "by", "to": "direct benefit transfers", "width": 1}, {"arrows": "to", "from": "by", "to": "opening", "width": 1}, {"arrows": "to", "from": "by", "to": "issued", "width": 1}, {"arrows": "to", "from": "\n", "to": "\n", "width": 1}, {"arrows": "to", "from": "\n", "to": ".", "width": 1}, {"arrows": "to", "from": "helped", "to": "helped", "width": 1}, {"arrows": "to", "from": "extend", "to": "helped", "width": 1}, {"arrows": "to", "from": "banking", "to": "extend", "width": 1}, {"arrows": "to", "from": "millions", "to": "to", "width": 1}, {"arrows": "to", "from": "Indians", "to": "of", "width": 1}, {"arrows": "to", "from": "improving", "to": "extend", "width": 1}, {"arrows": "to", "from": "financial inclusion", "to": "improving", "width": 1}, {"arrows": "to", "from": "reducing", "to": "improving", "width": 1}, {"arrows": "to", "from": "reducing", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "corruption", "to": "reducing", "width": 1}, {"arrows": "to", "from": "in", "to": "reducing", "width": 1}, {"arrows": "to", "from": "in", "to": "instrumental", "width": 1}, {"arrows": "to", "from": "in", "to": "transformed", "width": 1}, {"arrows": "to", "from": "in", "to": "25", "width": 1}, {"arrows": "to", "from": "in", "to": "one", "width": 1}, {"arrows": "to", "from": "in", "to": "turning point", "width": 1}, {"arrows": "to", "from": "in", "to": "significant challenge", "width": 1}, {"arrows": "to", "from": "government services access", "to": "in", "width": 1}, {"arrows": "to", "from": "poor", "to": "for", "width": 1}, {"arrows": "to", "from": "instrumental", "to": "been", "width": 1}, {"arrows": "to", "from": "achieving", "to": "in", "width": 1}, {"arrows": "to", "from": "this", "to": "goal", "width": 1}, {"arrows": "to", "from": "goal", "to": "achieving", "width": 1}, {"arrows": "to", "from": "KYC process", "to": "facilitated", "width": 1}, {"arrows": "to", "from": "KYC", "to": "KYC process", "width": 1}, {"arrows": "to", "from": "KYC", "to": "conducting", "width": 1}, {"arrows": "to", "from": "cost", "to": "reducing", "width": 1}, {"arrows": "to", "from": "conducting", "to": "of", "width": 1}, {"arrows": "to", "from": "e", "to": "conducting", "width": 1}, {"arrows": "to", "from": "-", "to": "conducting", "width": 1}, {"arrows": "to", "from": "from", "to": "conducting", "width": 1}, {"arrows": "to", "from": "12", "to": "6", "width": 1}, {"arrows": "to", "from": "cents", "to": "from", "width": 1}, {"arrows": "to", "from": "Indian government", "to": "pushing", "width": 1}, {"arrows": "to", "from": "Indian government", "to": "introduced", "width": 1}, {"arrows": "to", "from": "pushing", "to": "pushing", "width": 1}, {"arrows": "to", "from": "balance bank", "to": "accounts", "width": 1}, {"arrows": "to", "from": "accounts", "to": "for", "width": 1}, {"arrows": "to", "from": "accounts", "to": "opening", "width": 1}, {"arrows": "to", "from": "Pradhan Mantri Jan Dhan Yojana", "to": "under", "width": 1}, {"arrows": "to", "from": "opening", "to": "pushing", "width": 1}, {"arrows": "to", "from": "million", "to": "accounts", "width": 1}, {"arrows": "to", "from": "450", "to": "million", "width": 1}, {"arrows": "to", "from": "2022", "to": "by", "width": 1}, {"arrows": "to", "from": "Today", "to": "is", "width": 1}, {"arrows": "to", "from": "is", "to": "provides", "width": 1}, {"arrows": "to", "from": "is", "to": "is", "width": 1}, {"arrows": "to", "from": "provides", "to": "provides", "width": 1}, {"arrows": "to", "from": "ubiquitous", "to": "is", "width": 1}, {"arrows": "to", "from": "easy", "to": "quick authentication", "width": 1}, {"arrows": "to", "from": "quick authentication", "to": "provides", "width": 1}, {"arrows": "to", "from": "quick authentication", "to": "easy", "width": 1}, {"arrows": "to", "from": "helping", "to": "provides", "width": 1}, {"arrows": "to", "from": "empower", "to": "helping", "width": 1}, {"arrows": "to", "from": "citizens", "to": "empower", "width": 1}, {"arrows": "to", "from": "transformed", "to": "transformed", "width": 1}, {"arrows": "to", "from": "authentication ecosystem", "to": "transformed", "width": 1}, {"arrows": "to", "from": "authentication", "to": "authentication ecosystem", "width": 1}, {"arrows": "to", "from": "authentication", "to": "for", "width": 1}, {"arrows": "to", "from": "replaced", "to": "transformed", "width": 1}, {"arrows": "to", "from": "voter IDs", "to": "replaced", "width": 1}, {"arrows": "to", "from": "voter IDs", "to": "ration cards", "width": 1}, {"arrows": "to", "from": "such", "to": "as", "width": 1}, {"arrows": "to", "from": "as", "to": "voter IDs", "width": 1}, {"arrows": "to", "from": "as", "to": "serves", "width": 1}, {"arrows": "to", "from": "passports", "to": "as", "width": 1}, {"arrows": "to", "from": "ration cards", "to": "passports", "width": 1}, {"arrows": "to", "from": "ration cards", "to": "ration cards", "width": 1}, {"arrows": "to", "from": "Before", "to": "had", "width": 1}, {"arrows": "to", "from": "had", "to": "had", "width": 1}, {"arrows": "to", "from": "only", "to": "one", "width": 1}, {"arrows": "to", "from": "one", "to": "25", "width": 1}, {"arrows": "to", "from": "one", "to": "had", "width": 1}, {"arrows": "to", "from": "25", "to": "people", "width": 1}, {"arrows": "to", "from": "people", "to": "Aadhaar", "width": 1}, {"arrows": "to", "from": "people", "to": "to", "width": 1}, {"arrows": "to", "from": "any", "to": "form", "width": 1}, {"arrows": "to", "from": "form", "to": "had", "width": 1}, {"arrows": "to", "from": "form", "to": "lacked", "width": 1}, {"arrows": "to", "from": "formal identification", "to": "of", "width": 1}, {"arrows": "to", "from": "just", "to": "one", "width": 1}, {"arrows": "to", "from": "four", "to": "in", "width": 1}, {"arrows": "to", "from": "It", "to": "enabled", "width": 1}, {"arrows": "to", "from": "It", "to": "comprises", "width": 1}, {"arrows": "to", "from": "private sector", "to": "government", "width": 1}, {"arrows": "to", "from": "improve", "to": "enabled", "width": 1}, {"arrows": "to", "from": "efficiencies", "to": "improve", "width": 1}, {"arrows": "to", "from": "innovate", "to": "improve", "width": 1}, {"arrows": "to", "from": "new products", "to": "innovate", "width": 1}, {"arrows": "to", "from": "services", "to": "new products", "width": 1}, {"arrows": "to", "from": "using", "to": "innovate", "width": 1}, {"arrows": "to", "from": "first layer", "to": "is", "width": 1}, {"arrows": "to", "from": "India stack", "to": "of", "width": 1}, {"arrows": "to", "from": "comprises", "to": "comprises", "width": 1}, {"arrows": "to", "from": "individual", "to": "fingerprints", "width": 1}, {"arrows": "to", "from": "individual", "to": "biometric identity", "width": 1}, {"arrows": "to", "from": "fingerprints", "to": "comprises", "width": 1}, {"arrows": "to", "from": "\u0027s", "to": "individual", "width": 1}, {"arrows": "to", "from": "\u0027s", "to": "country", "width": 1}, {"arrows": "to", "from": "biometric", "to": "fingerprints", "width": 1}, {"arrows": "to", "from": "iris scan", "to": "fingerprints", "width": 1}, {"arrows": "to", "from": "demographic information", "to": "fingerprints", "width": 1}, {"arrows": "to", "from": "including", "to": "fingerprints", "width": 1}, {"arrows": "to", "from": "their", "to": "name", "width": 1}, {"arrows": "to", "from": "name", "to": "including", "width": 1}, {"arrows": "to", "from": "age", "to": "name", "width": 1}, {"arrows": "to", "from": "gender", "to": "age", "width": 1}, {"arrows": "to", "from": "residential address", "to": "gender", "width": 1}, {"arrows": "to", "from": "which", "to": "means", "width": 1}, {"arrows": "to", "from": "means", "to": "Aadhaar", "width": 1}, {"arrows": "to", "from": "foundation", "to": "means", "width": 1}, {"arrows": "to", "from": "digit number", "to": "is", "width": 1}, {"arrows": "to", "from": "serves", "to": "digit number", "width": 1}, {"arrows": "to", "from": "biometric identity", "to": "as", "width": 1}, {"arrows": "to", "from": "marked", "to": "marked", "width": 1}, {"arrows": "to", "from": "turning point", "to": "marked", "width": 1}, {"arrows": "to", "from": "country", "to": "digital transformation journey", "width": 1}, {"arrows": "to", "from": "digital transformation journey", "to": "in", "width": 1}, {"arrows": "to", "from": "In", "to": "introduced", "width": 1}, {"arrows": "to", "from": "introduced", "to": "introduced", "width": 1}, {"arrows": "to", "from": "2010", "to": "In", "width": 1}, {"arrows": "to", "from": "2010", "to": "Until", "width": 1}, {"arrows": "to", "from": "Aadhaar number", "to": "introduced", "width": 1}, {"arrows": "to", "from": "Aadhaar number", "to": "Aadhaar number", "width": 1}, {"arrows": "to", "from": "issued", "to": "Aadhaar number", "width": 1}, {"arrows": "to", "from": "Unique Identification Authority", "to": "by", "width": 1}, {"arrows": "to", "from": "UIDAI", "to": "India", "width": 1}, {"arrows": "to", "from": "posed", "to": "posed", "width": 1}, {"arrows": "to", "from": "significant challenge", "to": "posed", "width": 1}, {"arrows": "to", "from": "delivering", "to": "in", "width": 1}, {"arrows": "to", "from": "essential services", "to": "delivering", "width": 1}, {"arrows": "to", "from": "especially", "to": "in", "width": 1}, {"arrows": "to", "from": "rural areas", "to": "in", "width": 1}, {"arrows": "to", "from": "Until", "to": "lacked", "width": 1}, {"arrows": "to", "from": "lacked", "to": "lacked", "width": 1}, {"arrows": "to", "from": "vast majority", "to": "lacked", "width": 1}, {"arrows": "to", "from": "Indian population", "to": "of", "width": 1}, {"arrows": "to", "from": "reliable formal identification", "to": "of", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
